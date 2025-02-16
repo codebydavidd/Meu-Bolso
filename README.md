@@ -2,7 +2,7 @@
 
 ![Imagem do projeto finalizado](prints/projeto_completo.jpg)
 
-<h4 align="center"><a href="[https://lucyanovidio.vercel.app](https://meu-bolso-lilac.vercel.app/)">Confira o projeto aqui</a></h4>
+<h4 align="center"><a href="https://meu-bolso-lilac.vercel.app/">Confira o projeto aqui</a></h4>
 
 ---
 
