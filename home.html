@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerenciador Financeiro</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="light-theme">
+    <div class="theme-toggle">
+        <button id="themeToggle">
+            <i class="fas fa-moon"></i>
+        </button>
+    </div>
+
+    <div class="container">
+        <nav class="tabs">
+            <button class="tab-btn active" data-tab="dashboard">
+                <i class="fas fa-chart-line"></i> Dashboard
+            </button>
+            <button class="tab-btn" data-tab="expenses">
+                <i class="fas fa-receipt"></i> Registro de Gastos
+            </button>
+            <button class="tab-btn" data-tab="budget">
+                <i class="fas fa-wallet"></i> Orçamento Mensal
+            </button>
+            <button class="tab-btn" data-tab="simulation">
+                <i class="fas fa-calculator"></i> Simulação
+            </button>
+            <button class="tab-btn" data-tab="converter">
+                <i class="fas fa-exchange-alt"></i> Conversor
+            </button>
+            <button class="tab-btn" data-tab="goals">
+                <i class="fas fa-bullseye"></i> Metas
+            </button>
+            <button class="tab-btn" data-tab="reports">
+                <i class="fas fa-file-alt"></i> Relatórios
+            </button>
+        </nav>
+
+        <main class="content">
+            <!-- Dashboard -->
+            <section id="dashboard" class="tab-content active">
+                <h2>Dashboard</h2>
+                <div class="dashboard-grid">
+                    <div class="card">
+                        <h3>Resumo Mensal</h3>
+                        <canvas id="monthlyChart"></canvas>
+                    </div>
+                    <div class="card">
+                        <h3>Distribuição de Gastos</h3>
+                        <canvas id="expensePieChart"></canvas>
+                    </div>
+                    <div class="card alert-card">
+                        <h3>Alertas Financeiros</h3>
+                        <div id="financialAlerts"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Registro de Gastos -->
+            <section id="expenses" class="tab-content">
+                <h2>Registro de Gastos</h2>
+                <form id="expenseForm" class="expense-form">
+                    <div class="form-group">
+                        <label for="expenseDescription">Descrição</label>
+                        <input type="text" id="expenseDescription" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="expenseAmount">Valor</label>
+                        <input type="number" id="expenseAmount" step="0.01" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="expenseCategory">Categoria</label>
+                        <select id="expenseCategory" required>
+                            <option value="moradia">Moradia</option>
+                            <option value="alimentacao">Alimentação</option>
+                            <option value="transporte">Transporte</option>
+                            <option value="lazer">Lazer</option>
+                            <option value="outros">Outros</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="expenseDate">Data</label>
+                        <input type="date" id="expenseDate" required>
+                    </div>
+                    <button type="submit" class="btn-primary">Adicionar Despesa</button>
+                </form>
+                <div class="expenses-list">
+                    <h3>Despesas Registradas</h3>
+                    <div id="expensesList"></div>
+                </div>
+            </section>
+
+            <!-- Orçamento Mensal -->
+            <section id="budget" class="tab-content">
+                <h2>Orçamento Mensal</h2>
+                <form id="budgetForm" class="budget-form">
+                    <div class="form-group">
+                        <label for="monthlyBudget">Orçamento Mensal Total</label>
+                        <input type="number" id="monthlyBudget" step="0.01" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="budgetMonth">Mês de Referência</label>
+                        <input type="month" id="budgetMonth" required>
+                    </div>
+                    <button type="submit" class="btn-primary">Definir Orçamento</button>
+                </form>
+                <div class="budget-overview card">
+                    <h3>Visão Geral do Orçamento</h3>
+                    <div id="budgetProgress"></div>
+                </div>
+            </section>
+
+            <!-- Simulação -->
+            <section id="simulation" class="tab-content">
+                <h2>Simulação de Economia</h2>
+                <div class="simulation-container">
+                    <form id="simulationForm" class="simulation-form">
+                        <div class="form-group">
+                            <label for="categoryToReduce">Categoria para Redução</label>
+                            <select id="categoryToReduce" required>
+                                <option value="moradia">Moradia</option>
+                                <option value="alimentacao">Alimentação</option>
+                                <option value="transporte">Transporte</option>
+                                <option value="lazer">Lazer</option>
+                                <option value="outros">Outros</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="reductionPercentage">Percentual de Redução</label>
+                            <input type="range" id="reductionPercentage" min="0" max="100" step="5" value="20">
+                            <span id="percentageValue">20%</span>
+                        </div>
+                        <div class="form-group">
+                            <label for="simulationMonths">Período (meses)</label>
+                            <input type="number" id="simulationMonths" min="1" max="60" value="6">
+                        </div>
+                        <button type="submit" class="btn-primary">Simular Economia</button>
+                    </form>
+                    <div class="simulation-results card">
+                        <h3>Resultados da Simulação</h3>
+                        <div id="simulationResults"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Conversor -->
+            <section id="converter" class="tab-content">
+                <h2>Conversor de Moeda</h2>
+                <div class="converter-container">
+                    <form id="converterForm" class="converter-form">
+                        <div class="form-group">
+                            <label for="fromCurrency">De</label>
+                            <select id="fromCurrency" required>
+                                <option value="BRL">Real Brasileiro (BRL)</option>
+                                <option value="USD">Dólar Americano (USD)</option>
+                                <option value="EUR">Euro (EUR)</option>
+                                <option value="GBP">Libra Esterlina (GBP)</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="toCurrency">Para</label>
+                            <select id="toCurrency" required>
+                                <option value="USD">Dólar Americano (USD)</option>
+                                <option value="BRL">Real Brasileiro (BRL)</option>
+                                <option value="EUR">Euro (EUR)</option>
+                                <option value="GBP">Libra Esterlina (GBP)</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="amount">Valor</label>
+                            <input type="number" id="amount" step="0.01" required>
+                        </div>
+                        <button type="submit" class="btn-primary">Converter</button>
+                    </form>
+                    <div class="conversion-result card">
+                        <h3>Resultado da Conversão</h3>
+                        <div id="conversionResult"></div>
+                        <p class="update-time">Última atualização: <span id="lastUpdate"></span></p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Metas -->
+            <section id="goals" class="tab-content">
+                <h2>Metas Financeiras</h2>
+                <form id="goalForm" class="goal-form">
+                    <div class="form-group">
+                        <label for="goalDescription">Descrição da Meta</label>
+                        <input type="text" id="goalDescription" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="goalAmount">Valor Total</label>
+                        <input type="number" id="goalAmount" step="0.01" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="goalDeadline">Data Limite</label>
+                        <input type="date" id="goalDeadline" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="currentSaved">Valor já Economizado</label>
+                        <input type="number" id="currentSaved" step="0.01" value="0">
+                    </div>
+                    <button type="submit" class="btn-primary">Adicionar Meta</button>
+                </form>
+                <div class="goals-list">
+                    <h3>Minhas Metas</h3>
+                    <div id="goalsList" class="goals-grid"></div>
+                </div>
+            </section>
+
+            <!-- Relatórios -->
+            <section id="reports" class="tab-content">
+                <h2>Relatórios</h2>
+                <div class="reports-container">
+                    <div class="report-filters card">
+                        <h3>Filtros</h3>
+                        <form id="reportFilters" class="filters-form">
+                            <div class="form-group">
+                                <label for="reportStartDate">Data Inicial</label>
+                                <input type="date" id="reportStartDate" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="reportEndDate">Data Final</label>
+                                <input type="date" id="reportEndDate" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="reportCategories">Categorias</label>
+                                <select id="reportCategories" multiple>
+                                    <option value="moradia">Moradia</option>
+                                    <option value="alimentacao">Alimentação</option>
+                                    <option value="transporte">Transporte</option>
+                                    <option value="lazer">Lazer</option>
+                                    <option value="outros">Outros</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="btn-primary">Gerar Relatório</button>
+                        </form>
+                    </div>
+                    <div class="report-summary card">
+                        <h3>Resumo do Relatório</h3>
+                        <div id="reportSummary"></div>
+                    </div>
+                    <div class="report-actions">
+                        <button id="downloadPDF" class="btn-primary">
+                            <i class="fas fa-file-pdf"></i> Baixar PDF
+                        </button>
+                        <button id="downloadCSV" class="btn-primary">
+                            <i class="fas fa-file-csv"></i> Baixar CSV
+                        </button>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
